@@ -18,12 +18,12 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   },
   {
     path: 'sistema',
     loadChildren: () => import('./pages/sistema/sistema.module').then(m => m.SistemaModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   }
   ,
   {
