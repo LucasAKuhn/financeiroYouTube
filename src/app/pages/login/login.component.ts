@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
-import { LoginService } from 'src/app/services/login.service';
+import { AuthService } from '../../services/auth.service';
+import { LoginService } from '../../services/login.service';
 
 
 @Component({
@@ -14,9 +14,9 @@ import { LoginService } from 'src/app/services/login.service';
 export class LoginComponent {
 
   constructor(public formBuilder: FormBuilder,
-              private router: Router,
-              private loginService: LoginService,
-              public authService: AuthService) {
+    private router: Router,
+    private loginService: LoginService,
+    public authService: AuthService) {
 
   }
 
@@ -25,12 +25,12 @@ export class LoginComponent {
   ngOnInit(): void {
 
     this.loginForm = this.formBuilder.group
-    (
-      {
-        email: ['', [Validators.required, Validators.email]],
-        senha: ['', [Validators.required]]
-      }
-    )
+      (
+        {
+          email: ['', [Validators.required, Validators.email]],
+          senha: ['', [Validators.required]]
+        }
+      )
   }
 
 
@@ -40,6 +40,7 @@ export class LoginComponent {
 
 
   loginUser() {
+
     this.loginService.login(this.dadosForm["email"].value, this.dadosForm["senha"].value).subscribe(
       token => {
         this.authService.setToken(token);
@@ -50,22 +51,10 @@ export class LoginComponent {
       err => {
         alert('Ocorreu um erro');
       }
+
     )
+
   }
-  loginUser2() {
-
-    // this.loginService.login(this.dadosForm["email"].value, this.dadosForm["senha"].value).subscribe(
-    //   token => {
-    //     alert(token);
-    this.router.navigate(['/dashboard']);
-// },
-// err => {
-//   alert('Ocorreu um erro');
-}
-
-// )
 
 
 }
-
-

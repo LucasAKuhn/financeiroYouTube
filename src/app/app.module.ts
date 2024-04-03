@@ -21,7 +21,7 @@ const RxJS = [LoaderInterceptor, HTTPStatus];
   declarations: [
     AppComponent,
     LoginComponent,
-
+  
   ],
   imports: [
     BrowserModule,
@@ -31,7 +31,7 @@ const RxJS = [LoaderInterceptor, HTTPStatus];
     HttpClientModule,
 
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule,  
 
     NgxSpinnerModule
   ],
@@ -42,9 +42,9 @@ const RxJS = [LoaderInterceptor, HTTPStatus];
   ],
   bootstrap: [AppComponent],
   exports:
-    [
-      CommonModule
-    ],
+  [
+    CommonModule
+  ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

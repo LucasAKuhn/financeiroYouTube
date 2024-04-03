@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuService } from 'src/app/services/menu.service';
+import { MenuService } from '../../services/menu.service';
 
 @Component({
   selector: 'sidebar',
@@ -32,10 +32,10 @@ export class SidebarComponent {
         this.router.navigate(['/despesa']);
         break;
 
-      case 100:
-        localStorage.clear();
-        this.router.navigate(['/login']);
-        break;
+        case 100:
+          localStorage.clear();
+          this.router.navigate(['/login']);
+          break;
 
       default:
         break;

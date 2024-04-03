@@ -5,12 +5,12 @@ import { NavbarComponent } from './navbar.component';
 
 
 @NgModule(
-  {
-    declarations: [NavbarComponent],
-    imports: [CommonModule,
-      FormsModule],
-    exports: [NavbarComponent]
-  }
+    {
+        declarations: [NavbarComponent],
+        imports: [CommonModule,
+            FormsModule],
+        exports: [NavbarComponent]
+    }
 )
 
 export class NavbarModule { }

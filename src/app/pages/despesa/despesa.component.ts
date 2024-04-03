@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Categoria } from 'src/app/models/Categoria';
-import { Despesa } from 'src/app/models/Despesa';
-import { SelectModel } from 'src/app/models/SelectModel';
-import { SistemaFinanceiro } from 'src/app/models/SistemaFinanceiro';
-import { AuthService } from 'src/app/services/auth.service';
-import { CategoriaService } from 'src/app/services/categoria.service';
-import { DespesaService } from 'src/app/services/despesa.service';
-import { MenuService } from 'src/app/services/menu.service';
-import { SistemaService } from 'src/app/services/sistema.service';
+import { Categoria } from '../../models/Categoria';
+import { Despesa } from '../../models/Despesa';
+import { SelectModel } from '../../models/SelectModel';
+import { SistemaFinanceiro } from '../../models/SistemaFinanceiro';
+import { AuthService } from '../../services/auth.service';
+import { CategoriaService } from '../../services/categoria.service';
+import { DespesaService } from '../../services/despesa.service';
+import { MenuService } from '../../services/menu.service';
+import { SistemaService } from '../../services/sistema.service';
 
 @Component({
   selector: 'app-despesa',
@@ -18,9 +18,9 @@ import { SistemaService } from 'src/app/services/sistema.service';
 export class DespesaComponent {
 
   constructor(public menuService: MenuService, public formBuilder: FormBuilder,
-              public sistemaService: SistemaService, public authService : AuthService,
-              public categoriaService : CategoriaService,
-              public despesaService : DespesaService) {
+    public sistemaService: SistemaService, public authService : AuthService,
+    public categoriaService : CategoriaService,
+    public despesaService : DespesaService) {
   }
 
   listSistemas = new Array<SelectModel>();
@@ -40,18 +40,18 @@ export class DespesaComponent {
     this.menuService.menuSelecionado = 4;
 
     this.despesaForm = this.formBuilder.group
-    (
-      {
-        name: ['', [Validators.required]],
-        valor: ['', [Validators.required]],
-        data: ['', [Validators.required]],
-        sistemaSelect: ['', [Validators.required]],
-        categoriaSelect: ['', [Validators.required]],
-      }
-    )
+      (
+        {
+          name: ['', [Validators.required]],
+          valor: ['', [Validators.required]],
+          data: ['', [Validators.required]],
+          sistemaSelect: ['', [Validators.required]],
+          categoriaSelect: ['', [Validators.required]],
+        }
+      )
 
 
-    this.ListarCategoriasUsuario();
+      this.ListarCategoriasUsuario();
   }
 
 
@@ -72,12 +72,12 @@ export class DespesaComponent {
     item.IdCategoria = parseInt(this.categoriaSelect.id);
 
     this.despesaService.AdicionarDespesa(item)
-      .subscribe((response: Despesa) => {
+    .subscribe((response: Despesa) => {
 
-          this.despesaForm.reset();
+      this.despesaForm.reset();
 
-        }, (error) => console.error(error),
-        () => { })
+    }, (error) => console.error(error),
+      () => { })
   }
 
 
@@ -91,19 +91,19 @@ export class DespesaComponent {
     this.categoriaService.ListarCategoriasUsuario(this.authService.getEmailUser())
       .subscribe((reponse: Array<Categoria>) => {
 
-          var listaCatagorias = [];
+        var listaCatagorias = [];
 
-          reponse.forEach(x => {
-            var item = new SelectModel();
-            item.id = x.Id.toString();
-            item.name = x.Nome;
-            listaCatagorias.push(item);
+        reponse.forEach(x => {
+          var item = new SelectModel();
+          item.id = x.Id.toString();
+          item.name = x.Nome;
+          listaCatagorias.push(item);
 
-          });
+        });
 
-          this.listCategorias = listaCatagorias;
+        this.listCategorias = listaCatagorias;
 
-        }
+      }
 
       )
   }

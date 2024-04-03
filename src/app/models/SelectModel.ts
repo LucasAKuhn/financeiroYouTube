@@ -1,5 +1,5 @@
 export class SelectModel
 {
-  id:string="";
-  name:string ="";
+    id:string="";
+    name:string ="";
 }

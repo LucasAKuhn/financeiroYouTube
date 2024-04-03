@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Categoria } from 'src/app/models/Categoria';
-import { SelectModel } from 'src/app/models/SelectModel';
-import { SistemaFinanceiro } from 'src/app/models/SistemaFinanceiro';
-import { AuthService } from 'src/app/services/auth.service';
-import { CategoriaService } from 'src/app/services/categoria.service';
-import { MenuService } from 'src/app/services/menu.service';
-import { SistemaService } from 'src/app/services/sistema.service';
+import { Categoria } from '../../models/Categoria';
+import { SelectModel } from '../../models/SelectModel';
+import { SistemaFinanceiro } from '../../models/SistemaFinanceiro';
+import { AuthService } from '../../services/auth.service';
+import { CategoriaService } from '../../services/categoria.service';
+import { MenuService } from '../../services/menu.service';
+import { SistemaService } from '../../services/sistema.service';
 
 @Component({
   selector: 'app-categoria',
@@ -16,8 +16,8 @@ import { SistemaService } from 'src/app/services/sistema.service';
 export class CategoriaComponent {
 
   constructor(public menuService: MenuService, public formBuilder: FormBuilder,
-              public sistemaService: SistemaService, public authService : AuthService,
-              public categoriaService : CategoriaService) {
+    public sistemaService: SistemaService, public authService : AuthService,
+    public categoriaService : CategoriaService) {
   }
 
   listSistemas = new Array<SelectModel>();
@@ -29,14 +29,14 @@ export class CategoriaComponent {
     this.menuService.menuSelecionado = 3;
 
     this.categoriaForm = this.formBuilder.group
-    (
-      {
-        name: ['', [Validators.required]],
-        sistemaSelect:['',Validators.required]
-      }
-    )
+      (
+        {
+          name: ['', [Validators.required]],
+          sistemaSelect:['',Validators.required]
+        }
+      )
 
-    this.ListaSistemasUsuario();
+      this.ListaSistemasUsuario();
   }
 
 
@@ -54,12 +54,12 @@ export class CategoriaComponent {
     item.IdSistema = parseInt(this.sistemaSelect.id)
 
     this.categoriaService.AdicionarCategoria(item)
-      .subscribe((response: Categoria) => {
+    .subscribe((response: Categoria) => {
 
-          this.categoriaForm.reset();
+      this.categoriaForm.reset();
 
-        }, (error) => console.error(error),
-        () => { })
+    }, (error) => console.error(error),
+      () => { })
 
   }
 
@@ -68,20 +68,20 @@ export class CategoriaComponent {
     this.sistemaService.ListaSistemasUsuario(this.authService.getEmailUser())
       .subscribe((reponse: Array<SistemaFinanceiro>) => {
 
-          var lisSistemaFinanceiro = [];
+        var lisSistemaFinanceiro = [];
 
-          reponse.forEach(x => {
-            var item = new SelectModel();
-            item.id = x.Id.toString();
-            item.name = x.Nome;
+        reponse.forEach(x => {
+          var item = new SelectModel();
+          item.id = x.Id.toString();
+          item.name = x.Nome;
 
-            lisSistemaFinanceiro.push(item);
+          lisSistemaFinanceiro.push(item);
 
-          });
+        });
 
-          this.listSistemas = lisSistemaFinanceiro;
+        this.listSistemas = lisSistemaFinanceiro;
 
-        }
+      }
 
       )
   }
