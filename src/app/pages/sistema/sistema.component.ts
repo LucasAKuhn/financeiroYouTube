@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SistemaFinanceiro } from 'src/app/models/SistemaFinanceiro';
+import { AuthService } from 'src/app/services/auth.service';
 import { MenuService } from 'src/app/services/menu.service';
 import { SistemaService } from 'src/app/services/sistema.service';
 
@@ -12,7 +13,7 @@ import { SistemaService } from 'src/app/services/sistema.service';
 export class SistemaComponent {
 
   constructor(public menuService: MenuService, public formBuilder: FormBuilder,
-              public sistemaService: SistemaService) {
+              public sistemaService: SistemaService,public authService : AuthService) {
   }
 
 
@@ -53,8 +54,8 @@ export class SistemaComponent {
       .subscribe((response: SistemaFinanceiro) => {
 
           this.sistemaForm.reset();
-
-          this.sistemaService.CadastrarUsuarioNoSistema(response.Id,"valdir@valdir.com")
+                // this.sistemaService.CadastrarUsuarioNoSistema(response.Id,"valdir@valdir.com")
+          this.sistemaService.CadastrarUsuarioNoSistema(response.Id,this.authService.getEmailUser())
             .subscribe((response: any) => {
                 debugger
               }, (error) => console.error(error),
