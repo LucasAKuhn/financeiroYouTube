@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environment';
+import { environment } from 'src/environment';
 import { Categoria } from '../models/Categoria';
 
 
@@ -25,8 +25,18 @@ export class CategoriaService {
 
     ListarCategoriasUsuario(emailUsuario:string)
     {
-        return  this.httpClient.get(`${this.baseURL}/ListarCategoriasUsuario?emailUsuario=${emailUsuario}`);
+        return  this.httpClient.get(`${this.baseURL}/ListarCategoriasUsuario?emailUsuario=${emailUsuario}`);       
+    }
+
+    ObterCategoria(id: number) {
+        return this.httpClient.get(`${this.baseURL}/ObterCategoria?id=${id}`);
+    }
+
+    AtualizarCategoria(categoria: Categoria) {
+        return this.httpClient.put<Categoria>(`${this.baseURL}/AtualizarCategoria`,
+        categoria)
     }
 
 
+   
 }

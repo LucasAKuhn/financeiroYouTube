@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Categoria } from '../../models/Categoria';
-import { Despesa } from '../../models/Despesa';
-import { SelectModel } from '../../models/SelectModel';
-import { SistemaFinanceiro } from '../../models/SistemaFinanceiro';
-import { AuthService } from '../../services/auth.service';
-import { CategoriaService } from '../../services/categoria.service';
-import { DespesaService } from '../../services/despesa.service';
-import { MenuService } from '../../services/menu.service';
-import { SistemaService } from '../../services/sistema.service';
+import { Categoria } from 'src/app/models/Categoria';
+import { Despesa } from 'src/app/models/Despesa';
+import { SelectModel } from 'src/app/models/SelectModel';
+import { SistemaFinanceiro } from 'src/app/models/SistemaFinanceiro';
+import { AuthService } from 'src/app/services/auth.service';
+import { CategoriaService } from 'src/app/services/categoria.service';
+import { DespesaService } from 'src/app/services/despesa.service';
+import { MenuService } from 'src/app/services/menu.service';
+import { SistemaService } from 'src/app/services/sistema.service';
 
 @Component({
   selector: 'app-despesa',
@@ -17,10 +17,73 @@ import { SistemaService } from '../../services/sistema.service';
 })
 export class DespesaComponent {
 
+
+  tipoTela: number = 1;// 1 listagem, 2 cadastro, 3 edição
+  tableListDespesas: Array<Despesa>;
+  id: string;
+
+  page: number = 1;
+  config: any;
+  paginacao: boolean = true;
+  itemsPorPagina: number = 10
+
+  configpag() {
+    this.id = this.gerarIdParaConfigDePaginacao();
+
+    this.config = {
+      id: this.id,
+      currentPage: this.page,
+      itemsPerPage: this.itemsPorPagina
+
+    };
+  }
+
+  gerarIdParaConfigDePaginacao() {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < 10; i++) {
+      result += characters.charAt(Math.floor(Math.random() *
+        charactersLength));
+    }
+    return result;
+  }
+
+  cadastro() {
+    this.tipoTela = 2;
+    this.despesaForm.reset();
+  }
+
+  mudarItemsPorPage() {
+    this.page = 1
+    this.config.currentPage = this.page;
+    this.config.itemsPerPage = this.itemsPorPagina;
+  }
+
+  mudarPage(event: any) {
+    this.page = event;
+    this.config.currentPage = this.page;
+  }
+
+
+  ListarDespesasUsuario() {
+    this.tipoTela = 1;
+
+    this.despesaService.ListarDespesasUsuario(this.authService.getEmailUser())
+      .subscribe((response: Array<Despesa>) => {
+
+        this.tableListDespesas = response;
+
+      }, (error) => console.error(error),
+        () => { })
+
+  }
+
+
   constructor(public menuService: MenuService, public formBuilder: FormBuilder,
-    public sistemaService: SistemaService, public authService : AuthService,
-    public categoriaService : CategoriaService,
-    public despesaService : DespesaService) {
+    public sistemaService: SistemaService, public authService: AuthService,
+    public categoriaService: CategoriaService,
+    public despesaService: DespesaService) {
   }
 
   listSistemas = new Array<SelectModel>();
@@ -39,6 +102,9 @@ export class DespesaComponent {
   ngOnInit() {
     this.menuService.menuSelecionado = 4;
 
+    this.configpag();
+    this.ListarDespesasUsuario();
+
     this.despesaForm = this.formBuilder.group
       (
         {
@@ -51,7 +117,7 @@ export class DespesaComponent {
       )
 
 
-      this.ListarCategoriasUsuario();
+    this.ListarCategoriasUsuario();
   }
 
 
@@ -60,24 +126,48 @@ export class DespesaComponent {
   }
 
   enviar() {
-    debugger
+
     var dados = this.dadorForm();
 
-    let item = new Despesa();
-    item.Nome = dados["name"].value;
-    item.Id =0;
-    item.Valor = dados["valor"].value;
-    item.Pago = this.checked;
-    item.DataVencimento = dados["data"].value;
-    item.IdCategoria = parseInt(this.categoriaSelect.id);
+    if (this.itemEdicao) {
 
-    this.despesaService.AdicionarDespesa(item)
-    .subscribe((response: Despesa) => {
+      this.itemEdicao.Nome = dados["name"].value;
+      this.itemEdicao.Valor = dados["valor"].value;
+      this.itemEdicao.Pago = this.checked;
+      this.itemEdicao.DataVencimento = dados["data"].value;
+      this.itemEdicao.IdCategoria = parseInt(this.categoriaSelect.id);
 
-      this.despesaForm.reset();
+      this.itemEdicao.NomePropriedade = "";
+      this.itemEdicao.mensagem = "";
+      this.itemEdicao.notificacoes = [];
 
-    }, (error) => console.error(error),
-      () => { })
+      this.despesaService.AtualizarDespesa(this.itemEdicao)
+        .subscribe((response: Despesa) => {
+
+          this.despesaForm.reset();
+          this.ListarDespesasUsuario();
+
+        }, (error) => console.error(error),
+          () => { })
+
+    }
+    else {
+      let item = new Despesa();
+      item.Nome = dados["name"].value;
+      item.Valor = dados["valor"].value;
+      item.Pago = this.checked;
+      item.DataVencimento = dados["data"].value;
+      item.IdCategoria = parseInt(this.categoriaSelect.id);
+
+      this.despesaService.AdicionarDespesa(item)
+        .subscribe((response: Despesa) => {
+
+          this.despesaForm.reset();
+          this.ListarDespesasUsuario();
+
+        }, (error) => console.error(error),
+          () => { })
+    }
   }
 
 
@@ -87,7 +177,7 @@ export class DespesaComponent {
 
 
 
-  ListarCategoriasUsuario() {
+  ListarCategoriasUsuario(id: number = null) {
     this.categoriaService.ListarCategoriasUsuario(this.authService.getEmailUser())
       .subscribe((reponse: Array<Categoria>) => {
 
@@ -99,6 +189,10 @@ export class DespesaComponent {
           item.name = x.Nome;
           listaCatagorias.push(item);
 
+          if (id && id == x.Id) {
+            this.categoriaSelect = item;
+          }
+
         });
 
         this.listCategorias = listaCatagorias;
@@ -106,6 +200,45 @@ export class DespesaComponent {
       }
 
       )
+  }
+
+
+  itemEdicao: Despesa;
+
+  edicao(id: number) {
+    this.despesaService.ObterDespesa(id)
+      .subscribe((reponse: Despesa) => {
+
+        if (reponse) {
+          this.itemEdicao = reponse;
+          this.tipoTela = 2;
+
+          this.ListarCategoriasUsuario(reponse.IdCategoria);
+
+          var dados = this.dadorForm();
+          dados["name"].setValue(this.itemEdicao.Nome)
+
+          var dateToString = reponse.DataVencimento.toString();
+          var dateFull = dateToString.split('-');
+          var dayFull = dateFull[2].split('T');
+          var day = dayFull[0];
+          var month = dateFull[1];
+          var year = dateFull[0];
+
+          var dateInput = year + '-' + month + '-' + day;
+
+          dados["data"].setValue(dateInput);
+          dados["valor"].setValue(reponse.Valor);
+
+          this.checked = reponse.Pago;
+
+        }
+
+      },
+        (error) => console.error(error),
+        () => {
+
+        })
   }
 
 

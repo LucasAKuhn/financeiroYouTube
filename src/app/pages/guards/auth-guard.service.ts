@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, UrlTree, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 @Injectable(
@@ -28,17 +28,17 @@ export class AuthGuard implements CanActivate {
                 this.authService.UsuarioEstaAutenticado().then(status => {
                   let redirect: string = state.root.queryParams['redirect'];
                   let blnUnAuthorize = false;
-
+        
                   //validation
                   if (status === false)
                     blnUnAuthorize = true;
-
+        
                   //redirect
                   if (blnUnAuthorize && redirect != null && redirect.length > 0)
                     this.router.navigate(["login", { redirect }]);
                   else if (blnUnAuthorize)
                     this.router.navigate(["login"]);
-
+        
                   resolve(status);
                 })
                   .catch(() => {
@@ -46,7 +46,7 @@ export class AuthGuard implements CanActivate {
                     resolve(false);
                   })
               }))
-
+        
           }
 
 }
