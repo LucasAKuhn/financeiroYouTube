@@ -18,24 +18,30 @@ const routes: Routes = [
   {
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   },
   {
     path: 'sistema',
     loadChildren: () => import('./pages/sistema/sistema.module').then(m => m.SistemaModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   }
   ,
   {
     path: 'categoria',
     loadChildren: () => import('./pages/categoria/categoria.module').then(m => m.CategoriaModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   }
   ,
   {
     path: 'despesa',
     loadChildren: () => import('./pages/despesa/despesa.module').then(m => m.DespesaModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
+  }
+  ,
+  {
+    path: 'usuario',
+    loadChildren: () => import('./pages/usuario/usuario.module').then(m => m.UsuarioModule),
+    // canActivate:[AuthGuard]
   }
 ];
 
